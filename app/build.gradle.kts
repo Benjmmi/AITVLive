@@ -4,20 +4,20 @@ plugins {
 }
 
 android {
-    namespace = "com.vasthread.webviewtv"
-    compileSdk = 34
+    namespace = "com.vasthread.aitv"
+    compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.vasthread.webviewtv"
+        applicationId = "com.vasthread.aitv"
         minSdk = 21
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 6
         versionName = "1.6"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         ndk {
-            abiFilters += listOf("x86_64")
+            abiFilters += listOf("x86_64","arm64-v8a")
         }
     }
 

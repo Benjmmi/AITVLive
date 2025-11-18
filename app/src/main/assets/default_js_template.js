@@ -98,7 +98,7 @@ function wvt_fullscreenVideo() {
 		        window.wvt_video.requestFullscreen();
 		    }
 		} else {
-			console.error("wvt_video is null."); 
+			console.error("wvt_video is null.");
 		}
 	} else {
 		console.error("already in fullscreen.");
@@ -118,11 +118,11 @@ function wvt_main() {
 }
 
 if (!window.wvt_javascriptInjected) {
-	console.log("WebViewTv javascript injected successfully.");
+	console.log("AITV javascript injected successfully.");
 	console.log("selector=[" + selector + "], enterFullscreenButton=[" + enterFullscreenButton
 	 + "], playingCheckEnabled=[" + playingCheckEnabled + "].");
 	window.wvt_javascriptInjected = true
 	wvt_main();
 } else {
-	console.error("WebViewTv javascript already injected.");
+	console.error("AITV javascript already injected.");
 }

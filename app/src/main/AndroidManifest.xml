@@ -30,11 +30,6 @@
 			</intent-filter>
 		</activity>
 
-		<activity
-			android:name=".activity.TbsDebugActivity"
-			android:screenOrientation="sensorLandscape"
-			android:theme="@style/FullscreenTheme" />
-
 		<service
 			android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService"
 			android:label="dexopt"

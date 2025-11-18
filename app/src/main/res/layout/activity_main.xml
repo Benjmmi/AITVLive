@@ -7,42 +7,42 @@
 	android:layout_height="match_parent"
 	tools:context=".activity.MainActivity">
 
-	<com.vasthread.webviewtv.widget.ChannelPlayerView
+	<com.vasthread.aitv.widget.ChannelPlayerView
 		android:id="@+id/player"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent" />
 
-	<com.vasthread.webviewtv.widget.UiLayout
+	<com.vasthread.aitv.widget.UiLayout
 		android:id="@+id/uiLayout"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 
-		<com.vasthread.webviewtv.widget.PlaylistView
+		<com.vasthread.aitv.widget.PlaylistView
 			android:id="@+id/playlist"
 			android:layout_width="275dp"
 			android:layout_height="match_parent"
 			android:visibility="gone" />
 
-		<com.vasthread.webviewtv.widget.ExitConfirmView
+		<com.vasthread.aitv.widget.ExitConfirmView
 			android:id="@+id/exitConfirm"
 			android:layout_width="200dp"
 			android:layout_height="match_parent"
 			android:visibility="gone" />
 
-		<com.vasthread.webviewtv.widget.ChannelSettingsView
+		<com.vasthread.aitv.widget.ChannelSettingsView
 			android:id="@+id/channelSettings"
 			android:layout_width="160dp"
 			android:layout_height="match_parent"
 			android:layout_gravity="end"
 			android:visibility="gone" />
 
-		<com.vasthread.webviewtv.widget.AppSettingsView
+		<com.vasthread.aitv.widget.AppSettingsView
 			android:id="@+id/appSettings"
 			android:layout_width="400dp"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
 			android:visibility="gone" />
 
-	</com.vasthread.webviewtv.widget.UiLayout>
+	</com.vasthread.aitv.widget.UiLayout>
 
 </FrameLayout>

@@ -16,5 +16,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "WebViewTvLive"
+rootProject.name = "AITvLive"
 include(":app")

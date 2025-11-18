@@ -5,7 +5,7 @@
 	android:layout_height="match_parent"
 	android:gravity="center_vertical"
 	android:orientation="vertical"
-	android:paddingHorizontal="20dp"
+	android:paddingHorizontal="200dp"
 	android:paddingVertical="8dp">
 
 	<LinearLayout
@@ -19,7 +19,7 @@
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
 			android:singleLine="true"
-			android:textSize="18sp" />
+			android:textSize="9sp" />
 
 		<TextView
 			android:id="@+id/tvProgress"
@@ -27,14 +27,14 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginLeft="20dp"
-			android:textSize="18sp" />
+			android:textSize="9sp" />
 	</LinearLayout>
 
-	<TextView
-		android:id="@+id/tvChannelUrl"
-		android:singleLine="true"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:textSize="10sp"/>
+<!--	<TextView-->
+<!--		android:id="@+id/tvChannelUrl"-->
+<!--		android:singleLine="true"-->
+<!--		android:layout_width="wrap_content"-->
+<!--		android:layout_height="wrap_content"-->
+<!--		android:textSize="5sp"/>-->
 
 </LinearLayout>
