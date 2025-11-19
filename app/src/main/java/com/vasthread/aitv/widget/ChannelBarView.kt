@@ -54,7 +54,7 @@ class ChannelBarView @JvmOverloads constructor(
     private val tvChannelName: TextView
 
     /** 显示加载进度的TextView */
-    private val tvProgress: TextView
+//    private val tvProgress: TextView
 
     // 注释掉的代码：显示频道URL的TextView
     // private val tvChannelUrl: TextView
@@ -86,7 +86,7 @@ class ChannelBarView @JvmOverloads constructor(
 
         // 获取TextView引用
         tvChannelName = findViewById(R.id.tvChannelName)
-        tvProgress = findViewById(R.id.tvProgress)
+//        tvProgress = findViewById(R.id.tvProgress)
 
         // 注释掉的代码：获取频道URL的TextView
         // tvChannelUrl = findViewById(R.id.tvChannelUrl)
@@ -150,7 +150,7 @@ class ChannelBarView @JvmOverloads constructor(
         removeCallbacks(dismissAction)
 
         // 更新进度显示
-        tvProgress.text = "$progress%"
+//        tvProgress.text = "$progress%"
 
         // 如果加载完成（100%），3秒后自动隐藏
         if (progress == 100) {
