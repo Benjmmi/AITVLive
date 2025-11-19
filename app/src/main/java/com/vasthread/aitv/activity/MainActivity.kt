@@ -13,6 +13,7 @@
 
 package com.vasthread.aitv.activity
 
+import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.util.AttributeSet
@@ -112,7 +113,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var playlistView: PlaylistView
 
     /** 退出确认对话框视图 */
-    private lateinit var exitConfirmView: ExitConfirmView
+//    private lateinit var exitConfirmView: ExitConfirmView
 
     /** 频道设置视图，用于调整当前频道的设置 */
     private lateinit var channelSettingsView: ChannelSettingsView
@@ -141,7 +142,7 @@ class MainActivity : AppCompatActivity() {
 
             // 根据当前模式显示或隐藏相应的视图
             playlistView.visibility = if (value == UiMode.CHANNELS) View.VISIBLE else View.GONE
-            exitConfirmView.visibility = if (value == UiMode.EXIT_CONFIRM) View.VISIBLE else View.GONE
+//            exitConfirmView.visibility = if (value == UiMode.EXIT_CONFIRM) View.VISIBLE else View.GONE
             channelSettingsView.visibility = if (value == UiMode.CHANNEL_SETTINGS) View.VISIBLE else View.GONE
             appSettingsView.visibility = if (value == UiMode.APP_SETTINGS) View.VISIBLE else View.GONE
 
@@ -192,7 +193,7 @@ class MainActivity : AppCompatActivity() {
         uiLayout = findViewById(R.id.uiLayout)
         playerView = findViewById(R.id.player)
         playlistView = findViewById(R.id.playlist)
-        exitConfirmView = findViewById(R.id.exitConfirm)
+//        exitConfirmView = findViewById(R.id.exitConfirm)
         channelSettingsView = findViewById(R.id.channelSettings)
         appSettingsView = findViewById(R.id.appSettings)
 
@@ -267,16 +268,16 @@ class MainActivity : AppCompatActivity() {
         // 频道设置视图获取视频尺寸的回调
         channelSettingsView.onGetVideoSize = { playerView.getVideoSize() }
 
-        // 退出确认视图的用户选择回调
-        exitConfirmView.onUserSelection = { selection ->
-            if (selection == ExitConfirmView.Selection.EXIT) {
-                // 用户确认退出，结束Activity
-                finish()
-            } else {
-                // 用户取消退出，进入应用设置模式
-                uiMode = UiMode.APP_SETTINGS
-            }
-        }
+//        // 退出确认视图的用户选择回调
+//        exitConfirmView.onUserSelection = { selection ->
+//            if (selection == ExitConfirmView.Selection.EXIT) {
+//                // 用户确认退出，结束Activity
+//                finish()
+//            } else {
+//                // 用户取消退出，进入应用设置模式
+//                uiMode = UiMode.APP_SETTINGS
+//            }
+//        }
 
         // 播放器视图的关闭所有UI回调
         playerView.dismissAllViewCallback = { uiMode = UiMode.STANDARD }
@@ -418,6 +419,7 @@ class MainActivity : AppCompatActivity() {
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         finish()
+        System.exit(0)
     }
 
     /**
@@ -496,7 +498,6 @@ class MainActivity : AppCompatActivity() {
             }
             UiMode.EXIT_CONFIRM -> {
                 // 退出确认模式：将按键交给退出确认视图处理
-                if (exitConfirmView.dispatchKeyEvent(event)) return true
             }
             UiMode.CHANNEL_SETTINGS -> {
                 // 频道设置模式：将按键交给频道设置视图处理

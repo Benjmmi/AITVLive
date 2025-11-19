@@ -62,9 +62,6 @@ class ExitConfirmView @JvmOverloads constructor(
         SETTINGS   // 进入设置
     }
 
-    /** 设置按钮 */
-    private val btnSettings: Button
-
     /**
      * 用户选择的回调
      * 当用户点击按钮时，会调用这个回调传递用户的选择
@@ -94,29 +91,11 @@ class ExitConfirmView @JvmOverloads constructor(
         // 加载布局文件
         LayoutInflater.from(context).inflate(R.layout.widget_exit_confirm, this)
 
-        // 获取设置按钮并设置点击事件
-        btnSettings = findViewById(R.id.btnSettings)
-        btnSettings.setOnClickListener {
-            // 用户点击设置按钮，触发回调
-            onUserSelection?.invoke(Selection.SETTINGS)
-        }
-
         // 获取退出按钮并设置点击事件
-        findViewById<Button>(R.id.btnExit).setOnClickListener {
-            // 用户点击退出按钮，触发回调
-            onUserSelection?.invoke(Selection.EXIT)
-        }
-
-        // 显示应用版本和X5内核版本信息
-        // 格式: "App: 1.0 | X5: 43900"
-        findViewById<TextView>(R.id.tvAppInfo).text =
-            "App: ${context.packageManager.getPackageInfo(context.packageName, 0).versionName} | " +
-            "X5: ${QbSdk.getTbsVersion(context)}"
-
-        // 显示Android系统版本信息
-        // 格式: "Android 10 (API 29)"
-        findViewById<TextView>(R.id.tvSystemInfo).text =
-            "Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})"
+//        findViewById<Button>(R.id.btnExit).setOnClickListener {
+//            // 用户点击退出按钮，触发回调
+//            onUserSelection?.invoke(Selection.EXIT)
+//        }
     }
 
     /**
@@ -131,9 +110,5 @@ class ExitConfirmView @JvmOverloads constructor(
     override fun setVisibility(visibility: Int) {
         super.setVisibility(visibility)
 
-        // 如果对话框变为可见，让设置按钮获得焦点
-        if (visibility == VISIBLE) {
-            post { btnSettings.requestFocus() }
-        }
     }
 }

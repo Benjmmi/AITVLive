@@ -226,13 +226,6 @@ object PlaylistManager {
             Log.i(TAG, "A job is executing, ignore!")
             return
         }
-
-        // 注释掉的代码：用于测试的示例播放列表
-//        val playlistText = """
-//            [{"name":"CCTV-1 综合","group":"China","urls":["https://stream1.freetv.fun/a4f6e6163319cb6ad59892a54343f514a9ff20917af903f2ee1818e005f43202.ctv"]},{"name":"CCTV-2 财经","group":"China","urls":["https://stream1.freetv.fun/1847276d6bc5debba388a2d32acc6ac34427b06d901dedb2d9678954b03ad752.ctv"]}]
-//        """.trimIndent()
-//        playlistFile.writeText(playlistText)
-
         // 在IO线程中启动更新任务
         updatePlaylistJob = CoroutineScope(Dispatchers.IO).launch {
             var times = 0  // 重试次数计数器
