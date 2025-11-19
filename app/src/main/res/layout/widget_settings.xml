@@ -1,4 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2025 WebViewTvLive
+  ~
+  ~ 文件: widget_settings.xml
+  ~ 描述: 应用设置视图布局
+  ~
+  ~ 布局结构：
+  ~ 使用merge标签优化，包含一个RecyclerView显示设置项列表
+  ~
+  ~ 设置项包括：
+  ~ 1. 频道列表选择
+  ~ 2. 最大加载时间
+  ~ 3. 刷新频道列表
+  ~ 4. WebView可触摸开关
+  ~
+  ~ 对应的代码文件：
+  ~ - AppSettingsView.kt (应用设置视图控制器)
+  ~ - item_settings.xml (设置项布局)
+  -->
+
+<!--
+  ~ 根容器：merge标签
+  ~
+  ~ 父视图：AppSettingsView (继承自FrameLayout)
+  ~ 方向：vertical（通过父视图设置）
+  ~
+  ~ 优化：
+  ~ - 减少一层ViewGroup嵌套
+  ~ - 提高布局性能
+  -->
 <merge
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -6,6 +36,33 @@
 	android:layout_height="match_parent"
 	android:orientation="vertical">
 
+	<!--
+	  ~ 设置项列表RecyclerView
+	  ~
+	  ~ 位置：占据整个容器
+	  ~ 布局管理器：LinearLayoutManager（垂直列表）
+	  ~
+	  ~ 功能：
+	  ~ - 显示所有应用级设置项
+	  ~ - 支持遥控器上下键导航
+	  ~ - 支持遥控器左右键调整设置值
+	  ~
+	  ~ 列表项布局：item_settings.xml
+	  ~ - 标题 + 左右调整按钮 + 当前值
+	  ~
+	  ~ 对应代码：AppSettingsView.kt
+	  ~ - SettingsAdapter（适配器）
+	  ~ - ViewHolder（视图持有者）
+	  ~ - settings 数组（设置项数据）
+	  ~
+	  ~ 设置项类型：
+	  ~ 1. 可选择型：有多个选项可选（显示左右按钮和当前值）
+	  ~ 2. 点击型：点击执行操作（只显示标题）
+	  ~
+	  ~ 数据源：
+	  ~ - AppSettingsView.settings 数组
+	  ~ - 包含4个设置项（频道列表、加载时间、刷新、触摸开关）
+	  -->
 	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/rvSettings"
 		android:layout_width="match_parent"

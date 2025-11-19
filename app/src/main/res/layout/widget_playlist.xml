@@ -1,4 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2025 WebViewTvLive
+  ~
+  ~ 文件: widget_playlist.xml
+  ~ 描述: 频道列表视图布局
+  ~
+  ~ 布局结构：
+  ~ 使用垂直LinearLayout布局，从上到下依次为：
+  ~ 1. 分组导航栏（包含翻页按钮和分组名称）
+  ~ 2. 更新进度条（播放列表更新时显示）
+  ~ 3. 频道列表（RecyclerView）
+  ~
+  ~ 视图层次（从上到下）：
+  ~ ┌─────────────────────────┐
+  ~ │  ◀  央视频道(15)  ▶    │ ← 分组导航栏
+  ~ ├─────────────────────────┤
+  ~ │  ═════════════════      │ ← 更新进度条（更新时显示）
+  ~ ├─────────────────────────┤
+  ~ │ 01 CCTV-1 综合          │ ← 频道列表
+  ~ │ 02 CCTV-2 财经          │   (RecyclerView)
+  ~ │ 03 CCTV-3 综艺          │
+  ~ │ ...                     │
+  ~ └─────────────────────────┘
+  ~
+  ~ 对应的代码文件：
+  ~ - PlaylistView.kt (频道列表视图控制器)
+  ~ - item_channel.xml (频道列表项布局)
+  -->
+
+<!--
+  ~ 根容器：使用merge标签优化布局
+  ~
+  ~ parentTag="android.widget.LinearLayout" 提示工具：
+  ~ - merge会被父视图LinearLayout替换
+  ~ - 这样可以在预览时正确显示布局
+  ~
+  ~ 父视图：PlaylistView (继承自LinearLayout，垂直方向)
+  -->
 <merge
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,6 +45,24 @@
 	android:layout_height="match_parent"
 	tools:parentTag="android.widget.LinearLayout">
 
+	<!--
+	  ~ 分组导航栏
+	  ~
+	  ~ 位置：顶部
+	  ~ 高度：50dp（固定高度）
+	  ~ 布局：水平LinearLayout
+	  ~ 内边距：5dp（上下左右）
+	  ~
+	  ~ 子视图（从左到右）：
+	  ~ - 上翻页按钮（◀）
+	  ~ - 分组名称 + 频道数量
+	  ~ - 下翻页按钮（▶）
+	  ~
+	  ~ 功能：
+	  ~ - 显示当前分组名称和频道数量
+	  ~ - 点击或遥控器左右键切换分组
+	  ~ - 只有一个分组时隐藏翻页按钮
+	  -->
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="50dp"
@@ -17,6 +73,23 @@
 		android:paddingEnd="5dp"
 		android:paddingBottom="5dp">
 
+		<!--
+		  ~ 上翻页按钮（向左箭头）
+		  ~
+		  ~ 宽度：70dp（固定宽度）
+		  ~ 高度：match_parent（填充父容器高度）
+		  ~ 背景：@drawable/bg_item（带焦点状态的背景）
+		  ~ 文本：◀（向左箭头）
+		  ~ 焦点：不可获得焦点（focusable="false"）
+		  ~ 默认状态：隐藏（visibility="gone"）
+		  ~
+		  ~ 功能：
+		  ~ - 点击切换到上一个分组
+		  ~ - 配合遥控器左键使用（左键有视觉反馈）
+		  ~ - 只在有多个分组时显示
+		  ~
+		  ~ 对应代码：PlaylistView.kt 的 turnPage(false)
+		  -->
 		<Button
 			android:id="@+id/btnPageUp"
 			android:layout_width="70dp"
@@ -26,6 +99,26 @@
 			android:text="◀"
 			android:visibility="gone" />
 
+		<!--
+		  ~ 分组名称TextView
+		  ~
+		  ~ 宽度：0dp + layout_weight="1"（占据剩余空间）
+		  ~ 高度：wrap_content（自适应内容）
+		  ~ 对齐：center（居中对齐）
+		  ~ 单行显示：singleLine="true"（超出省略）
+		  ~ 默认文本："未加载列表"
+		  ~ 字体大小：17sp
+		  ~
+		  ~ 显示格式："央视频道(15)"
+		  ~ - 分组名 + (频道数量)
+		  ~
+		  ~ 功能：
+		  ~ - 显示当前分组的名称和频道数量
+		  ~ - 让用户知道当前浏览的是哪个分组
+		  ~
+		  ~ 对应代码：PlaylistView.kt 的 setCurrentGroup()
+		  ~ 更新逻辑：tvGroupName.text = "${group.name}(${group.channels.size})"
+		  -->
 		<TextView
 			android:id="@+id/tvGroupName"
 			android:layout_width="0dp"
@@ -36,6 +129,23 @@
 			android:text="未加载列表"
 			android:textSize="17sp" />
 
+		<!--
+		  ~ 下翻页按钮（向右箭头）
+		  ~
+		  ~ 宽度：70dp（固定宽度）
+		  ~ 高度：match_parent（填充父容器高度）
+		  ~ 背景：@drawable/bg_item（带焦点状态的背景）
+		  ~ 文本：▶（向右箭头）
+		  ~ 焦点：不可获得焦点（focusable="false"）
+		  ~ 默认状态：隐藏（visibility="gone"）
+		  ~
+		  ~ 功能：
+		  ~ - 点击切换到下一个分组
+		  ~ - 配合遥控器右键使用（右键有视觉反馈）
+		  ~ - 只在有多个分组时显示
+		  ~
+		  ~ 对应代码：PlaylistView.kt 的 turnPage(true)
+		  -->
 		<Button
 			android:id="@+id/btnPageDown"
 			android:layout_width="70dp"
@@ -46,24 +156,102 @@
 			android:visibility="gone" />
 	</LinearLayout>
 
-	<FrameLayout android:layout_height="4dp"
-		android:layout_width="match_parent">
+	<!--
+	  ~ 更新进度指示区域
+	  ~
+	  ~ 位置：分组导航栏和频道列表之间
+	  ~ 高度：4dp（很薄的一条）
+	  ~ 布局：FrameLayout（层叠布局）
+	  ~
+	  ~ 子视图（从底到顶）：
+	  ~ 1. 分隔线（半透明白色细线）
+	  ~ 2. 更新进度条（播放列表更新时显示）
+	  ~
+	  ~ 功能：
+	  ~ - 作为视觉分隔，区分导航栏和列表
+	  ~ - 播放列表更新时显示进度动画
+	  -->
+	<FrameLayout
+		android:layout_width="match_parent"
+		android:layout_height="4dp">
 
+		<!--
+		  ~ 分隔线
+		  ~
+		  ~ 宽度：match_parent（占满宽度）
+		  ~ 高度：1px（1像素的细线）
+		  ~ 对齐：center（垂直居中）
+		  ~ 背景：#55EEEEEE（半透明浅灰色）
+		  ~
+		  ~ 功能：
+		  ~ - 提供视觉分隔
+		  ~ - 让布局层次更清晰
+		  -->
 		<TextView
 			android:layout_width="match_parent"
 			android:layout_height="1px"
 			android:layout_gravity="center"
 			android:background="#55EEEEEE" />
 
+		<!--
+		  ~ 更新进度条
+		  ~
+		  ~ 宽度：match_parent（占满宽度）
+		  ~ 高度：match_parent（4dp，与父容器一致）
+		  ~ 样式：水平进度条
+		  ~ 模式：indeterminate="true"（不确定模式，循环动画）
+		  ~
+		  ~ 功能：
+		  ~ - 播放列表更新时显示
+		  ~ - 提供视觉反馈，告知用户正在更新
+		  ~ - 更新完成后自动隐藏
+		  ~
+		  ~ 对应代码：PlaylistView.kt 的 updating 属性
+		  ~ 显示逻辑：pbUpdating.visibility = if (updating) VISIBLE else GONE
+		  -->
 		<ProgressBar
 			android:id="@+id/pbUpdating"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:indeterminate="true"
-			style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+			style="@style/Widget.AppCompat.ProgressBar.Horizontal" />
 
 	</FrameLayout>
 
+	<!--
+	  ~ 频道列表RecyclerView
+	  ~
+	  ~ 位置：占据剩余所有空间
+	  ~ 宽度：match_parent
+	  ~ 高度：match_parent（LinearLayout中会占据剩余空间）
+	  ~ 左右内边距：5dp
+	  ~ 滚动条：vertical（垂直滚动条）
+	  ~ 布局管理器：LinearLayoutManager（线性垂直布局）
+	  ~
+	  ~ 功能：
+	  ~ - 显示当前分组的所有频道
+	  ~ - 支持垂直滚动
+	  ~ - 高亮显示当前播放的频道
+	  ~ - 点击或确认键选择频道
+	  ~
+	  ~ 列表项布局：item_channel.xml
+	  ~ - 每个频道占一行
+	  ~ - 显示序号和频道名称
+	  ~ - 当前播放的频道高亮显示
+	  ~
+	  ~ 对应代码：PlaylistView.kt
+	  ~ - ChannelAdapter（适配器）
+	  ~ - ViewHolder（视图持有者）
+	  ~ - focusCurrentChannel()（自动定位到当前频道）
+	  ~
+	  ~ 数据源：
+	  ~ - ChannelGroup.channels（当前分组的频道列表）
+	  ~
+	  ~ 交互：
+	  ~ - 遥控器上下键：移动焦点
+	  ~ - 遥控器确认键/点击：选择频道
+	  ~ - 遥控器左右键：切换分组
+	  -->
 	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/rvChannels"
 		android:layout_width="match_parent"

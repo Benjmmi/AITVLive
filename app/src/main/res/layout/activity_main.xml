@@ -1,4 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2025 WebViewTvLive
+  ~
+  ~ 文件: activity_main.xml
+  ~ 描述: 主Activity布局文件
+  ~
+  ~ 布局结构：
+  ~ 采用FrameLayout作为根容器，使用层叠布局方式，
+  ~ 将播放器视图作为底层，各种UI面板作为上层覆盖。
+  ~
+  ~ 视图层次（从底到顶）：
+  ~ 1. ChannelPlayerView - 频道播放器（底层，全屏显示）
+  ~ 2. UiLayout - UI容器层（顶层，包含所有交互面板）
+  ~    ├─ PlaylistView - 频道列表面板（左侧，默认隐藏）
+  ~    ├─ ExitConfirmView - 退出确认面板（左侧，默认隐藏）
+  ~    ├─ ChannelSettingsView - 频道设置面板（右侧，默认隐藏）
+  ~    └─ AppSettingsView - 应用设置面板（居中，默认隐藏）
+  ~
+  ~ 显示逻辑：
+  ~ - 默认只显示播放器，所有面板隐藏（标准播放模式）
+  ~ - 用户按键时，通过MainActivity控制不同面板的显示/隐藏
+  ~ - 同一时间只显示一个面板，其他面板保持隐藏
+  ~
+  ~ 对应的代码文件：
+  ~ - MainActivity.kt (主控制器)
+  ~ - ChannelPlayerView.kt (播放器视图)
+  ~ - PlaylistView.kt (频道列表视图)
+  ~ - ExitConfirmView.kt (退出确认视图)
+  ~ - ChannelSettingsView.kt (频道设置视图)
+  ~ - AppSettingsView.kt (应用设置视图)
+  ~ - UiLayout.kt (刘海屏适配容器)
+  -->
+
+<!-- 根容器：FrameLayout，支持子视图层叠显示 -->
 <FrameLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
@@ -7,28 +41,106 @@
 	android:layout_height="match_parent"
 	tools:context=".activity.MainActivity">
 
+	<!--
+	  ~ ChannelPlayerView - 频道播放器视图（底层）
+	  ~
+	  ~ 位置：占据整个屏幕
+	  ~ 层级：最底层，永久显示
+	  ~ 功能：
+	  ~ - 显示视频播放画面（使用WebView播放）
+	  ~ - 包含加载进度条（WaitingView）
+	  ~ - 包含频道信息栏（ChannelBarView）
+	  ~
+	  ~ 对应类：ChannelPlayerView.kt
+	  ~ 布局文件：widget_channel_player.xml
+	  -->
 	<com.vasthread.aitv.widget.ChannelPlayerView
 		android:id="@+id/player"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent" />
 
+	<!--
+	  ~ UiLayout - UI容器（顶层）
+	  ~
+	  ~ 位置：占据整个屏幕
+	  ~ 层级：覆盖在播放器之上
+	  ~ 功能：
+	  ~ - 作为所有UI面板的容器
+	  ~ - 处理刘海屏（DisplayCutout）适配，为子视图添加安全区域内边距
+	  ~ - 子视图默认都是隐藏的，通过MainActivity控制显示
+	  ~
+	  ~ 对应类：UiLayout.kt
+	  ~ 安全区域适配：Android P+ 的刘海屏会自动添加padding
+	  -->
 	<com.vasthread.aitv.widget.UiLayout
 		android:id="@+id/uiLayout"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 
+		<!--
+		  ~ PlaylistView - 频道列表视图
+		  ~
+		  ~ 位置：屏幕左侧
+		  ~ 宽度：275dp（约占屏幕宽度的1/7，适合1920x1080分辨率）
+		  ~ 默认状态：隐藏（visibility="gone"）
+		  ~ 显示时机：用户按确认键时显示
+		  ~
+		  ~ 功能：
+		  ~ - 显示所有可用频道列表
+		  ~ - 支持分组显示和翻页
+		  ~ - 高亮当前播放的频道
+		  ~ - 点击或确认键选择频道
+		  ~
+		  ~ 对应类：PlaylistView.kt
+		  ~ 布局文件：widget_playlist.xml
+		  ~ UI模式：UiMode.CHANNELS
+		  -->
 		<com.vasthread.aitv.widget.PlaylistView
 			android:id="@+id/playlist"
 			android:layout_width="275dp"
 			android:layout_height="match_parent"
 			android:visibility="gone" />
 
+		<!--
+		  ~ ExitConfirmView - 退出确认视图
+		  ~
+		  ~ 位置：屏幕左侧
+		  ~ 宽度：200dp
+		  ~ 默认状态：隐藏（visibility="gone"）
+		  ~ 显示时机：用户按返回键时显示
+		  ~
+		  ~ 功能：
+		  ~ - 显示退出确认对话框
+		  ~ - 显示应用版本信息
+		  ~ - 提供"退出"和"设置"两个选项
+		  ~
+		  ~ 对应类：ExitConfirmView.kt
+		  ~ 布局文件：widget_exit_confirm.xml
+		  ~ UI模式：UiMode.EXIT_CONFIRM
+		  -->
 		<com.vasthread.aitv.widget.ExitConfirmView
 			android:id="@+id/exitConfirm"
 			android:layout_width="200dp"
 			android:layout_height="match_parent"
 			android:visibility="gone" />
 
+		<!--
+		  ~ ChannelSettingsView - 频道设置视图
+		  ~
+		  ~ 位置：屏幕右侧（layout_gravity="end"）
+		  ~ 宽度：160dp
+		  ~ 默认状态：隐藏（visibility="gone"）
+		  ~ 显示时机：用户按菜单键时显示
+		  ~
+		  ~ 功能：
+		  ~ - 显示实时信息：网络速度、视频分辨率、当前时间
+		  ~ - 切换播放源（如果频道有多个源）
+		  ~ - 调整画面比例（16:9 或 4:3）
+		  ~
+		  ~ 对应类：ChannelSettingsView.kt
+		  ~ 布局文件：widget_channel_settings.xml
+		  ~ UI模式：UiMode.CHANNEL_SETTINGS
+		  -->
 		<com.vasthread.aitv.widget.ChannelSettingsView
 			android:id="@+id/channelSettings"
 			android:layout_width="160dp"
@@ -36,6 +148,25 @@
 			android:layout_gravity="end"
 			android:visibility="gone" />
 
+		<!--
+		  ~ AppSettingsView - 应用设置视图
+		  ~
+		  ~ 位置：屏幕中央（layout_gravity="center"）
+		  ~ 宽度：400dp
+		  ~ 高度：自适应内容（wrap_content）
+		  ~ 默认状态：隐藏（visibility="gone"）
+		  ~ 显示时机：从退出确认界面选择"设置"时显示
+		  ~
+		  ~ 功能：
+		  ~ - 选择播放列表
+		  ~ - 设置最大加载时间
+		  ~ - 刷新频道列表
+		  ~ - 切换WebView可触摸状态
+		  ~
+		  ~ 对应类：AppSettingsView.kt
+		  ~ 布局文件：widget_settings.xml
+		  ~ UI模式：UiMode.APP_SETTINGS
+		  -->
 		<com.vasthread.aitv.widget.AppSettingsView
 			android:id="@+id/appSettings"
 			android:layout_width="400dp"

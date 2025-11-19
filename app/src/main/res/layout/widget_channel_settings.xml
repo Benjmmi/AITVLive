@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2025 WebViewTvLive
+  ~
+  ~ 文件: widget_channel_settings.xml
+  ~ 描述: 频道设置视图布局
+  ~
+  ~ 布局结构：垂直LinearLayout，从上到下分为两部分：
+  ~ 1. 设置区域（占据主要空间，weight=1）
+  ~    - 播放源选择（源1、源2按钮）
+  ~    - 画面比例选择（16:9、4:3按钮）
+  ~    - 视频分辨率显示
+  ~ 2. 底部信息栏
+  ~    - 当前时间显示
+  ~    - 网络速度显示
+  ~
+  ~ 对应的代码文件：
+  ~ - ChannelSettingsView.kt (频道设置视图控制器)
+  -->
+
+<!-- 根容器：垂直LinearLayout -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,6 +27,18 @@
     android:paddingVertical="10dp"
     android:background="@drawable/bg">
 
+    <!--
+      ~ 设置区域
+      ~
+      ~ 位置：占据大部分空间（weight=1）
+      ~ 对齐：center（垂直居中）
+      ~ 方向：vertical（垂直排列）
+      ~
+      ~ 包含控件（从上到下）：
+      ~ 1. 播放源选择
+      ~ 2. 画面比例选择
+      ~ 3. 视频分辨率显示
+      -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -14,6 +46,7 @@
         android:orientation="vertical"
         android:gravity="center">
 
+        <!-- 播放源标题 -->
         <TextView
             android:id="@+id/tvSource"
             android:layout_width="match_parent"
@@ -23,12 +56,24 @@
             android:textColor="@color/color_text"
             android:textSize="18sp" />
 
+        <!--
+          ~ 播放源选择按钮容器
+          ~
+          ~ 包含两个按钮：源1、源2
+          ~ 只有当频道有多个播放源时才显示
+          ~ 点击切换到对应的播放源
+          ~
+          ~ 对应代码：ChannelSettingsView.kt
+          ~ - setSelectedChannelSource() 控制显示/隐藏
+          ~ - onChannelSourceSelected 回调
+          -->
         <LinearLayout
             android:id="@+id/llSource"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center">
 
+            <!-- 播放源1按钮 -->
             <Button
                 android:id="@+id/btnSource1"
                 android:layout_width="50dp"
@@ -41,6 +86,7 @@
                 android:textColor="@color/color_text"
                 android:textSize="18sp" />
 
+            <!-- 播放源2按钮 -->
             <Button
                 android:id="@+id/btnSource2"
                 android:layout_width="50dp"
@@ -54,6 +100,7 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
+        <!-- 画面比例标题 -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -62,6 +109,15 @@
             android:textColor="@color/color_text"
             android:textSize="18sp" />
 
+        <!--
+          ~ 画面比例按钮：16:9
+          ~
+          ~ 点击设置视频画面比例为16:9（宽屏）
+          ~ 适合大多数现代视频内容
+          ~
+          ~ 对应代码：ChannelSettingsView.kt
+          ~ - onAspectRatioSelected 回调
+          -->
         <Button
             android:id="@+id/rbAspectRatio_16_9"
             android:layout_width="100dp"
@@ -74,6 +130,15 @@
             android:textColor="@color/color_text"
             android:textSize="18sp" />
 
+        <!--
+          ~ 画面比例按钮：4:3
+          ~
+          ~ 点击设置视频画面比例为4:3（标准）
+          ~ 适合老式电视节目
+          ~
+          ~ 对应代码：ChannelSettingsView.kt
+          ~ - onAspectRatioSelected 回调
+          -->
         <Button
             android:id="@+id/rbAspectRatio_4_3"
             android:layout_width="100dp"
@@ -86,6 +151,7 @@
             android:textColor="@color/color_text"
             android:textSize="18sp" />
 
+        <!-- 视频分辨率标题 -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -94,6 +160,19 @@
             android:textColor="@color/color_text"
             android:textSize="17sp" />
 
+        <!--
+          ~ 视频分辨率显示
+          ~
+          ~ 显示当前视频的分辨率，格式：宽x高
+          ~ 例如：1920x1080、1280x720
+          ~ 默认显示：0x0（未加载）
+          ~
+          ~ 更新频率：每秒更新一次
+          ~
+          ~ 对应代码：ChannelSettingsView.kt
+          ~ - onGetVideoSize 回调获取视频尺寸
+          ~ - updateAction Runnable定时更新
+          -->
         <TextView
             android:id="@+id/tvVideoSize"
             android:layout_width="wrap_content"
@@ -107,10 +186,33 @@
 
     </LinearLayout>
 
+    <!--
+      ~ 底部信息栏
+      ~
+      ~ 位置：底部
+      ~ 布局：水平LinearLayout
+      ~
+      ~ 显示内容：
+      ~ - 左侧：当前时间（HH:mm:ss）
+      ~ - 右侧：网络速度（KB/s 或 MB/s）
+      ~
+      ~ 更新频率：每秒更新一次
+      -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <!--
+          ~ 当前时间显示
+          ~
+          ~ 位置：底部左侧
+          ~ 格式：HH:mm:ss（例如：14:30:25）
+          ~
+          ~ 更新频率：每秒更新一次
+          ~
+          ~ 对应代码：ChannelSettingsView.kt
+          ~ - updateAction Runnable中更新
+          -->
         <TextView
             android:id="@+id/tvCurrentTime"
             android:layout_width="wrap_content"
@@ -119,6 +221,24 @@
             android:textColor="@color/color_text"
             android:textSize="15sp" />
 
+        <!--
+          ~ 网络速度显示
+          ~
+          ~ 位置：底部右侧（gravity="end"）
+          ~ 格式：XX KB/s 或 XX MB/s
+          ~ 默认显示：-- KB/s
+          ~
+          ~ 更新频率：每秒更新一次
+          ~ 计算方式：基于流量字节差值和时间差
+          ~
+          ~ 自动单位转换：
+          ~ - 小于1000 KB/s：显示为 KB/s
+          ~ - 大于等于1000 KB/s：显示为 MB/s
+          ~
+          ~ 对应代码：ChannelSettingsView.kt
+          ~ - updateNetworkSpeed() 计算网络速度
+          ~ - updateAction Runnable中更新
+          -->
         <TextView
             android:id="@+id/tvCurrentNetworkSpeed"
             android:layout_width="match_parent"

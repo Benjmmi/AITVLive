@@ -1,4 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2025 WebViewTvLive
+  ~
+  ~ 文件: widget_waiting.xml
+  ~ 描述: 加载等待视图布局
+  ~
+  ~ 布局结构：
+  ~ 垂直LinearLayout，居中显示：
+  ~ 1. 圆形进度条（ProgressBar）
+  ~ 2. "正在加载..." 文本
+  ~
+  ~ 显示位置：播放器中央
+  ~ 显示时机：
+  ~ - 开始加载频道时显示
+  ~ - 视频开始播放时隐藏
+  ~ - 加载超时时自动切换到下一个播放源
+  ~
+  ~ 对应的代码文件：
+  ~ - WaitingView.kt (加载等待视图控制器)
+  -->
+
+<!--
+  ~ 根容器：垂直LinearLayout
+  ~
+  ~ 位置：播放器中央（通过父布局控制）
+  ~ 对齐：center（水平和垂直居中）
+  ~ 方向：vertical（垂直排列）
+  ~
+  ~ 子视图：
+  ~ 1. ProgressBar（上）
+  ~ 2. TextView（下）
+  -->
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
@@ -6,11 +38,40 @@
 	android:gravity="center"
 	android:orientation="vertical">
 
+    <!--
+      ~ 圆形进度条
+      ~
+      ~ 样式：默认的圆形进度条
+      ~ 大小：wrap_content（自适应）
+      ~ 模式：不确定模式（循环动画，不显示具体进度）
+      ~
+      ~ 功能：
+      ~ - 提供视觉反馈，告知用户正在加载
+      ~ - 循环旋转动画，表示后台正在工作
+      ~
+      ~ 对应代码：WaitingView.kt
+      ~ - 通过visibility控制显示/隐藏
+      -->
     <ProgressBar
         android:id="@+id/pb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+	<!--
+	  ~ 加载提示文本
+	  ~
+	  ~ 位置：进度条下方
+	  ~ 顶部边距：5dp（与进度条保持间距）
+	  ~ 文本内容："正在加载..."
+	  ~
+	  ~ 功能：
+	  ~ - 文字提示，增强用户体验
+	  ~ - 配合进度条，明确告知当前状态
+	  ~
+	  ~ 对应代码：WaitingView.kt
+	  ~ - 文本内容固定，不需要代码更新
+	  ~ - 通过父视图的visibility控制显示/隐藏
+	  -->
 	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"

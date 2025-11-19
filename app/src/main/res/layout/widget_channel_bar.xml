@@ -1,4 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2025 WebViewTvLive
+  ~
+  ~ 文件: widget_channel_bar.xml
+  ~ 描述: 频道信息栏布局
+  ~
+  ~ 布局结构：
+  ~ 水平LinearLayout，从左到右：
+  ~ - 频道名称（占据剩余空间）
+  ~ - 加载进度（固定宽度）
+  ~
+  ~ 显示位置：播放器底部中央
+  ~ 显示时机：切换频道时显示，3秒后自动隐藏
+  ~
+  ~ 对应的代码文件：
+  ~ - ChannelBarView.kt (频道信息栏控制器)
+  -->
+
+<!--
+  ~ 根容器：水平LinearLayout
+  ~
+  ~ 位置：播放器底部中央（通过父布局控制）
+  ~ 对齐：center_vertical（垂直居中）
+  ~ 内边距：
+  ~ - 水平：200dp（左右各200dp，居中显示）
+  ~ - 垂直：8dp（上下各8dp）
+  ~
+  ~ 背景：半透明黑色（通过父视图设置）
+  -->
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
@@ -8,11 +37,32 @@
 	android:paddingHorizontal="200dp"
 	android:paddingVertical="8dp">
 
+	<!--
+	  ~ 信息栏主体：水平布局
+	  ~
+	  ~ 包含：
+	  ~ - 频道名称（左侧，占据剩余空间）
+	  ~ - 加载进度（右侧，固定宽度）
+	  -->
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:orientation="horizontal">
 
+		<!--
+		  ~ 频道名称显示
+		  ~
+		  ~ 位置：左侧
+		  ~ 宽度：0dp + weight=1（占据剩余空间）
+		  ~ 单行显示：singleLine="true"（超出省略）
+		  ~ 字体大小：9sp（较小）
+		  ~
+		  ~ 显示内容：当前正在加载/播放的频道名称
+		  ~ 例如："CCTV-1 综合"
+		  ~
+		  ~ 对应代码：ChannelBarView.kt
+		  ~ - setChannel() 方法更新频道名称
+		  -->
 		<TextView
 			android:id="@+id/tvChannelName"
 			android:layout_width="0dp"
@@ -21,6 +71,27 @@
 			android:singleLine="true"
 			android:textSize="9sp" />
 
+		<!--
+		  ~ 加载进度显示
+		  ~
+		  ~ 位置：右侧
+		  ~ 宽度：wrap_content（自适应内容）
+		  ~ 左边距：20dp（与频道名称保持间距）
+		  ~ 单行显示：singleLine="true"
+		  ~ 字体大小：9sp（较小）
+		  ~
+		  ~ 显示内容：加载进度百分比
+		  ~ 格式："[45%]"
+		  ~ 范围：0-100%
+		  ~
+		  ~ 更新时机：
+		  ~ - 开始加载：显示0%
+		  ~ - 加载中：根据进度更新
+		  ~ - 加载完成：隐藏整个信息栏
+		  ~
+		  ~ 对应代码：ChannelBarView.kt
+		  ~ - setProgress() 方法更新进度
+		  -->
 		<TextView
 			android:id="@+id/tvProgress"
 			android:singleLine="true"
@@ -30,6 +101,12 @@
 			android:textSize="9sp" />
 	</LinearLayout>
 
+	<!--
+	  ~ 频道URL显示（已注释掉）
+	  ~
+	  ~ 原本用于调试，显示当前频道的播放URL
+	  ~ 正式版本中已禁用，保留代码供开发调试使用
+	  -->
 <!--	<TextView-->
 <!--		android:id="@+id/tvChannelUrl"-->
 <!--		android:singleLine="true"-->

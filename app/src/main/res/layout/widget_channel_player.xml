@@ -1,20 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2025 WebViewTvLive
+  ~
+  ~ 文件: widget_channel_player.xml
+  ~ 描述: 频道播放器视图布局
+  ~
+  ~ 布局结构：
+  ~ 使用<merge>标签作为根元素，减少布局层级，提高性能。
+  ~ merge标签在inflate时会被父视图（FrameLayout）替换，
+  ~ 所以这里的子视图会直接成为ChannelPlayerView的子视图。
+  ~
+  ~ 视图层次（从底到顶）：
+  ~ 1. WebpageAdapterWebView - WebView播放器（底层，视频显示）
+  ~ 2. FrameLayout - 全屏视频容器（中层，用于视频全屏时的占位）
+  ~ 3. WaitingView - 加载等待视图（上层，加载时显示）
+  ~ 4. ChannelBarView - 频道信息栏（顶层，显示频道名和进度）
+  ~
+  ~ 显示逻辑：
+  ~ - WebView始终存在，用于播放视频
+  ~ - fullscreenContainer用于视频全屏播放时的容器
+  ~ - WaitingView在加载视频时显示，加载完成后隐藏
+  ~ - ChannelBarView在切换频道时显示，3秒后自动隐藏
+  ~
+  ~ 对应的代码文件：
+  ~ - ChannelPlayerView.kt (播放器视图控制器)
+  ~ - WebpageAdapterWebView.kt (WebView封装)
+  ~ - WaitingView.kt (加载等待视图)
+  ~ - ChannelBarView.kt (频道信息栏)
+  -->
+
+<!--
+  ~ 根容器：使用merge标签优化布局层次
+  ~
+  ~ merge标签的作用：
+  ~ - 减少一层不必要的ViewGroup嵌套
+  ~ - 提高布局渲染性能
+  ~ - inflate时，merge的子视图会直接添加到父视图中
+  ~
+  ~ 父视图：ChannelPlayerView (继承自FrameLayout)
+  ~ 因此这里的layout_width和layout_height实际上被父视图的属性覆盖
+  -->
 <merge
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
+	<!--
+	  ~ WebpageAdapterWebView - 视频播放WebView（底层）
+	  ~
+	  ~ 位置：占据整个播放器区域
+	  ~ 层级：最底层
+	  ~ 功能：
+	  ~ - 使用腾讯X5内核显示网页
+	  ~ - 播放M3U8视频流
+	  ~ - 注入JavaScript控制视频播放
+	  ~ - 处理视频全屏切换
+	  ~
+	  ~ 对应类：WebpageAdapterWebView.kt
+	  ~ 播放流程：
+	  ~ 1. 加载频道URL对应的网页
+	  ~ 2. 注入JavaScript代码
+	  ~ 3. JavaScript查找并控制<video>标签
+	  ~ 4. 视频开始播放
+	  ~
+	  ~ 注意：这不是直接播放视频，而是加载一个包含视频的网页
+	  -->
 	<com.vasthread.aitv.widget.WebpageAdapterWebView
 		android:id="@+id/webView"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent" />
 
+	<!--
+	  ~ FrameLayout - 全屏视频容器（中层）
+	  ~
+	  ~ 位置：占据整个播放器区域，居中对齐
+	  ~ 层级：覆盖在WebView之上
+	  ~ 功能：
+	  ~ - 当视频进入全屏模式时，作为视频View的容器
+	  ~ - 平时为空，不显示任何内容
+	  ~ - 全屏时，WebView的视频View会移动到这个容器中
+	  ~
+	  ~ 使用场景：
+	  ~ - 用户请求全屏播放（如在某些网页中）
+	  ~ - WebChromeClient.onShowCustomView() 回调时使用
+	  ~
+	  ~ 注意：这是为了支持H5全屏API，大多数时候是空的
+	  -->
 	<FrameLayout
 		android:id="@+id/fullscreenContainer"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layout_gravity="center" />
 
+	<!--
+	  ~ WaitingView - 加载等待视图（上层）
+	  ~
+	  ~ 位置：屏幕中央
+	  ~ 尺寸：100dp x 100dp（固定大小的加载指示器）
+	  ~ 默认状态：隐藏（visibility="gone"）
+	  ~ 显示时机：
+	  ~ - 开始加载频道时显示
+	  ~ - 视频开始播放时隐藏
+	  ~ - 加载超时（默认15秒）时自动切换到下一个播放源
+	  ~
+	  ~ 功能：
+	  ~ - 显示圆形进度条（ProgressBar）
+	  ~ - 显示加载进度百分比（0-100%）
+	  ~ - 超时自动重试机制
+	  ~
+	  ~ 对应类：WaitingView.kt
+	  ~ 布局文件：widget_waiting.xml
+	  ~
+	  ~ 加载流程：
+	  ~ 1. 设置频道 → WaitingView显示
+	  ~ 2. 开始加载视频 → 进度更新
+	  ~ 3. 视频可播放 → WaitingView隐藏
+	  ~ 4. 如果超时 → 切换下一个源，重新加载
+	  -->
 	<com.vasthread.aitv.widget.WaitingView
 		android:id="@+id/waitingView"
 		android:layout_width="100dp"
@@ -22,6 +124,33 @@
 		android:layout_gravity="center"
 		android:visibility="gone" />
 
+	<!--
+	  ~ ChannelBarView - 频道信息栏（顶层）
+	  ~
+	  ~ 位置：屏幕底部中央
+	  ~ 宽度：500dp（固定宽度，适合显示频道名称）
+	  ~ 高度：自适应内容（wrap_content）
+	  ~ 底部边距：30dp（距离屏幕底部）
+	  ~ 默认状态：隐藏（visibility="gone"）
+	  ~ 显示时机：
+	  ~ - 切换频道时显示
+	  ~ - 显示3秒后自动隐藏
+	  ~ - 加载完成时隐藏
+	  ~
+	  ~ 功能：
+	  ~ - 显示频道名称
+	  ~ - 显示加载进度（0-100%）
+	  ~ - 半透明黑色背景
+	  ~
+	  ~ 对应类：ChannelBarView.kt
+	  ~ 布局文件：widget_channel_bar.xml
+	  ~
+	  ~ 显示效果：
+	  ~ ┌─────────────────────┐
+	  ~ │  CCTV-1 综合  [45%] │  ← 半透明黑色背景
+	  ~ └─────────────────────┘
+	  ~        ↑ 屏幕底部中央
+	  -->
 	<com.vasthread.aitv.widget.ChannelBarView
 		android:id="@+id/channelBarView"
 		android:layout_width="500dp"
