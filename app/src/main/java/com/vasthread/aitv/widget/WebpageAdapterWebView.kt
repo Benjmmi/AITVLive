@@ -183,7 +183,6 @@ class WebpageAdapterWebView @JvmOverloads constructor(
          * 返回true表示拦截，不让WebView自动加载
          */
         override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-            // 注释掉的代码：view.loadUrl(url)
             // 返回true阻止WebView加载，防止页面跳转
             return true
         }
@@ -193,7 +192,6 @@ class WebpageAdapterWebView @JvmOverloads constructor(
          * 返回true表示WebView不处理该按键
          */
         override fun shouldOverrideKeyEvent(view: WebView, event: KeyEvent): Boolean {
-            // 日志已注释：Log.i(TAG, "shouldOverrideKeyEvent $event")
             return super.shouldOverrideKeyEvent(view, event)
         }
 
@@ -201,7 +199,6 @@ class WebpageAdapterWebView @JvmOverloads constructor(
          * 处理未被WebView消费的按键事件
          */
         override fun onUnhandledKeyEvent(view: WebView, event: KeyEvent) {
-            // 日志已注释：Log.i(TAG, "onUnhandledKeyEvent $event")
             super.onUnhandledKeyEvent(view, event)
         }
 
@@ -209,7 +206,6 @@ class WebpageAdapterWebView @JvmOverloads constructor(
          * 当WebView加载资源时调用（图片、CSS、JS等）
          */
         override fun onLoadResource(view: WebView, url: String) {
-            // 日志已注释：Log.i(TAG, "onLoadResource, $url")
             super.onLoadResource(view, url)
         }
 

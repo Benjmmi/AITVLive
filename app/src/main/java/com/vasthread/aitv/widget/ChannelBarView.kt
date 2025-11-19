@@ -53,12 +53,6 @@ class ChannelBarView @JvmOverloads constructor(
     /** 显示频道名称的TextView */
     private val tvChannelName: TextView
 
-    /** 显示加载进度的TextView */
-//    private val tvProgress: TextView
-
-    // 注释掉的代码：显示频道URL的TextView
-    // private val tvChannelUrl: TextView
-
     /**
      * 自动隐藏的定时任务
      * 当加载完成后，延迟3秒执行
@@ -86,10 +80,6 @@ class ChannelBarView @JvmOverloads constructor(
 
         // 获取TextView引用
         tvChannelName = findViewById(R.id.tvChannelName)
-//        tvProgress = findViewById(R.id.tvProgress)
-
-        // 注释掉的代码：获取频道URL的TextView
-        // tvChannelUrl = findViewById(R.id.tvChannelUrl)
 
         // 初始状态为隐藏
         visibility = GONE
@@ -112,9 +102,6 @@ class ChannelBarView @JvmOverloads constructor(
 
         // 显示频道名称
         tvChannelName.text = channel.name
-
-        // 注释掉的代码：显示频道URL
-        // tvChannelUrl.text = channel.url
 
         // 重置进度为0
         setProgress(0)
@@ -148,9 +135,6 @@ class ChannelBarView @JvmOverloads constructor(
     fun setProgress(progress: Int) {
         // 移除之前的自动隐藏任务
         removeCallbacks(dismissAction)
-
-        // 更新进度显示
-//        tvProgress.text = "$progress%"
 
         // 如果加载完成（100%），3秒后自动隐藏
         if (progress == 100) {

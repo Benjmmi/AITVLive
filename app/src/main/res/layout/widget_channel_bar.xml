@@ -70,48 +70,6 @@
 			android:layout_weight="1"
 			android:singleLine="true"
 			android:textSize="9sp" />
-
-		<!--
-		  ~ 加载进度显示
-		  ~
-		  ~ 位置：右侧
-		  ~ 宽度：wrap_content（自适应内容）
-		  ~ 左边距：20dp（与频道名称保持间距）
-		  ~ 单行显示：singleLine="true"
-		  ~ 字体大小：9sp（较小）
-		  ~
-		  ~ 显示内容：加载进度百分比
-		  ~ 格式："[45%]"
-		  ~ 范围：0-100%
-		  ~
-		  ~ 更新时机：
-		  ~ - 开始加载：显示0%
-		  ~ - 加载中：根据进度更新
-		  ~ - 加载完成：隐藏整个信息栏
-		  ~
-		  ~ 对应代码：ChannelBarView.kt
-		  ~ - setProgress() 方法更新进度
-		  -->
-<!--		<TextView-->
-<!--			android:id="@+id/tvProgress"-->
-<!--			android:singleLine="true"-->
-<!--			android:layout_width="wrap_content"-->
-<!--			android:layout_height="wrap_content"-->
-<!--			android:layout_marginLeft="20dp"-->
-<!--			android:textSize="9sp" />-->
 	</LinearLayout>
-
-	<!--
-	  ~ 频道URL显示（已注释掉）
-	  ~
-	  ~ 原本用于调试，显示当前频道的播放URL
-	  ~ 正式版本中已禁用，保留代码供开发调试使用
-	  -->
-<!--	<TextView-->
-<!--		android:id="@+id/tvChannelUrl"-->
-<!--		android:singleLine="true"-->
-<!--		android:layout_width="wrap_content"-->
-<!--		android:layout_height="wrap_content"-->
-<!--		android:textSize="5sp"/>-->
 
 </LinearLayout>

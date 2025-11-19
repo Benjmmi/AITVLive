@@ -97,16 +97,6 @@ class ChannelPlayerView @JvmOverloads constructor(
                 // 有效频道，开始加载
                 webView.loadUrl(value.url)
 
-                // 注释掉的代码：备用的加载方式
-//                webView.loadUrl("http://106.53.99.30/php/cctv/cctvnews.php?id=cctv2&q=lg")
-//                webView.loadDataWithBaseURL(
-//                    null,
-//                    html(value.url),
-//                    "text/html",
-//                    "UTF-8",
-//                    null
-//                )
-
                 // 显示频道信息栏
                 channelBarView.setCurrentChannelAndShow(value)
             }

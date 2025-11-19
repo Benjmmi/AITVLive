@@ -282,15 +282,8 @@ class MainActivity : AppCompatActivity() {
         playerView.dismissAllViewCallback = { uiMode = UiMode.STANDARD }
 
         // 播放器视图的点击事件回调
-        // 注意：当前这个功能被注释掉了，可能在未来版本中启用
         playerView.clickCallback = { x, _ ->
-            // 根据点击位置决定显示频道列表还是频道设置
-            // 左侧点击显示频道列表，右侧点击显示频道设置
-//            val channelSettingsWidth = channelSettingsView.layoutParams.width + uiLayout.paddingRight
-//            uiMode = if (uiMode == UiMode.STANDARD)
-//                if (x < playerView.width - channelSettingsWidth) UiMode.CHANNELS else UiMode.CHANNEL_SETTINGS
-//            else
-//                UiMode.STANDARD
+            // 当前未使用点击事件
         }
 
         // 播放器视图的视频比例改变回调
@@ -420,18 +413,11 @@ class MainActivity : AppCompatActivity() {
     /**
      * 处理返回键按下事件
      *
-     * 行为：
-     * - 在标准模式下，显示退出确认对话框
-     * - 在其他模式下，返回标准模式
+     * 行为：直接退出应用
      */
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         finish()
-//        uiMode = if (uiMode == UiMode.STANDARD) {
-//            UiMode.EXIT_CONFIRM  // 标准模式下按返回键显示退出确认
-//        } else {
-//            UiMode.STANDARD      // 其他模式下按返回键返回标准模式
-//        }
     }
 
     /**
